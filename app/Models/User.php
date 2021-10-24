@@ -21,7 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'gender'
+        'gender',
+        'remember_token'
     ];
 
     /**
@@ -45,5 +46,11 @@ class User extends Authenticatable
 
     public function posts(){
         return $this->hasMany(Post::class);
+    }
+
+    public function byCategory($category_id){
+        return User::whereHas('posts', function ($query) use($category_id){
+            $query->where('category_id', $category_id);
+        })->orderBy('name')->get();
     }
 }
